@@ -5,7 +5,7 @@ document.getElementById('search-box').addEventListener('input', function () {
     return;
   }
 
-  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/players/?q=${encodeURIComponent(query)}`, {
+  fetch(`https://alanwan.dev/projects/roundrobin/api/players/?q=${encodeURIComponent(query)}`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -63,7 +63,7 @@ function saveSelectState() {
 document.getElementById('nCourts').addEventListener('change', saveSelectState);
 
 function restoreActivePlayers() {
-  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/getactive/`, {
+  fetch(`https://alanwan.dev/projects/roundrobin/api/getactive/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -75,7 +75,7 @@ function restoreActivePlayers() {
     active_players_list = data.active_players.replace("[", "").replace("]", "").split(",")
     for (const player_id of active_players_list) {
       let pid = parseInt(player_id.replace(" ", ""))
-      fetch(`http://127.0.0.1:8000/projects/roundrobin/api/player/?id=${encodeURIComponent(pid)}`, {
+      fetch(`https://alanwan.dev/projects/roundrobin/api/player/?id=${encodeURIComponent(pid)}`, {
       headers: {
         'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
@@ -153,7 +153,7 @@ function updateActivePlayers() {
   console.log(arrayAsString)
 
 
-  fetch('http://127.0.0.1:8000/projects/roundrobin/api/active/', {
+  fetch('https://alanwan.dev/projects/roundrobin/api/active/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
