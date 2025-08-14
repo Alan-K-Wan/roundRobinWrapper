@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'roundRobinWrapper/style.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'roundRobinWrapper/script.js' %} " defer>
+    const csrftoken = {{ csrf_token }}
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="interface-container">
+    <p>credit: https://github.com/Prasi21/Badminton-Round-Robin</p>
+    <h1>1. Select active players</h1>
+    <p>Search then click on name to add to pool<p>
+    <input type="text" id="search-box" placeholder="Search players...">
+    <ul id="results-list"></ul>
+    <h2>Active players</h2>
+    <p>Click on name to remove from pool</p>
+    <ul id="active-players">
+    </ul>
+    <h1>2. Set game parameters</h1>
+    <label for="nCourts">Number of courts available: </label>
+    <select name="nCourts" id="nCourts">
+        <option value="option1">1</option>
+        <option value="option2">2</option>
+        <option value="option3">3</option>
+        <option value="option4">4</option>
+        <option value="option5">5</option>
+        <option value="option6">6</option>
+        <option value="option7">7</option>
+        <option value="option8">8</option>
+        <option value="option9">9</option>
+    </select>
+    <h1>3. Generate game</h1>
+    <button>Go</button>
+</div>
+{% endblock %}
