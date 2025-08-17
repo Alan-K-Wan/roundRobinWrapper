@@ -1,11 +1,64 @@
+function addActivePlayers(peg_name, peg_colour, gender) {
+  let jsonData = {
+    'peg_name': peg_name,
+    'peg_colour': peg_colour,
+    'gender': gender
+  }
+
+
+  fetch('http://127.0.0.1:8000/projects/roundrobin/api/addactive/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')  // Required by Django
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Response from backend:', data);
+
+  })
+  .catch(error => {
+    console.error('Error sending array:', error);
+  });
+
+}
+
+function removeActivePlayers(peg_name) {
+  let jsonData = {
+    'peg_name': peg_name
+  }
+
+
+  fetch('http://127.0.0.1:8000/projects/roundrobin/api/removeactive/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')  // Required by Django
+    },
+    body: JSON.stringify(jsonData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Response from backend:', data);
+
+  })
+  .catch(error => {
+    console.error('Error sending array:', error);
+  });
+
+}
+
 document.getElementById('search-box').addEventListener('input', function () {
+  document.getElementById("already-added").textContent = ""
   const query = this.value.trim();
   if (query.length < 2) {
     document.getElementById('results-list').innerHTML = '';
     return;
   }
 
-  fetch(`https://alanwan.dev/projects/roundrobin/api/players/?q=${encodeURIComponent(query)}`, {
+  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/players/?q=${encodeURIComponent(query)}`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -32,13 +85,18 @@ document.getElementById('search-box').addEventListener('input', function () {
         for (let active_player of active.children) {
           if(active_player.id == item.id) {
             console.log("already active")
+            document.getElementById("already-added").textContent = active_player.textContent + " is already in queue!"
             return
           }
         }
+        //console.log(e.target.getAttribute('gender'))
+        addActivePlayers(e.target.textContent, e.target.getAttribute('peg_colour'), e.target.getAttribute('gender'))
+        document.getElementById("already-added").textContent = ""
         const element = document.createElement('li')
         element.textContent = item.textContent
         element.id = item.id
         element.addEventListener("click", (e) => {
+          removeActivePlayers(e.target.textContent)
           e.target.remove()
           updateActivePlayers()
         })
@@ -63,7 +121,7 @@ function saveSelectState() {
 document.getElementById('nCourts').addEventListener('change', saveSelectState);
 
 function restoreActivePlayers() {
-  fetch(`https://alanwan.dev/projects/roundrobin/api/getactive/`, {
+  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/getactive/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -75,7 +133,7 @@ function restoreActivePlayers() {
     active_players_list = data.active_players.replace("[", "").replace("]", "").split(",")
     for (const player_id of active_players_list) {
       let pid = parseInt(player_id.replace(" ", ""))
-      fetch(`https://alanwan.dev/projects/roundrobin/api/player/?id=${encodeURIComponent(pid)}`, {
+      fetch(`http://127.0.0.1:8000/projects/roundrobin/api/player/?id=${encodeURIComponent(pid)}`, {
       headers: {
         'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
@@ -128,6 +186,42 @@ function restoreSelectState() {
   
 }
 
+function generateGame() {
+  
+  document.getElementById('games').textContent = "Loading..."
+  document.getElementById('genGame').disabled = true
+
+  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/getnextgame/`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  })
+  .then(res => res.json() )
+  .then(data => {
+    console.log(data)
+    document.getElementById('games').textContent = JSON.stringify(data)
+    document.getElementById('genGame').disabled = false
+
+  })
+  .catch(error => {
+    console.error('Search failed:', error);
+  })
+}
+
+function resetHistory() {
+
+  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/resetHistory/`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  })
+}
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -153,7 +247,7 @@ function updateActivePlayers() {
   console.log(arrayAsString)
 
 
-  fetch('https://alanwan.dev/projects/roundrobin/api/active/', {
+  fetch('http://127.0.0.1:8000/projects/roundrobin/api/active/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -171,6 +265,8 @@ function updateActivePlayers() {
   });
 
 }
+
+
 
 // Call the function when the page loads
 window.onload = restoreSelectState;

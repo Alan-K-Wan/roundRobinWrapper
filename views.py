@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.views.decorators.http import require_POST
 import json
+from .Badminton_Round_Robin import roundRobin
 
 def index(request):
     all_players = Player.objects.all().order_by('peg_name')
@@ -15,7 +16,7 @@ def index(request):
     return render(request, 'roundRobinWrapper/index.html', context)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated]) # AllowAny if public
+@permission_classes([IsAuthenticated]) 
 def player_search_api(request):
     query = request.GET.get('q', '')
     results = []
@@ -30,9 +31,9 @@ def player_search_api(request):
     return Response(results)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated]) # AllowAny if public
+@permission_classes([IsAuthenticated]) 
 def get_active_player_api(request):
-    with open("active_players.txt", "r") as file:
+    with open("roundRobinWrapperData/active_players.txt", "r") as file:
         content = file.read()
         results = {
             'active_players': content,
@@ -40,7 +41,7 @@ def get_active_player_api(request):
         return Response(results)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated]) # AllowAny if public
+@permission_classes([IsAuthenticated]) 
 def save_active_player_api(request):
     array_str = request.data.get('data')
 
@@ -53,7 +54,7 @@ def save_active_player_api(request):
             return Response({'error': 'Invalid number list'}, status=400)
 
         # Respond or process as needed
-        with open("active_players.txt", 'w') as file:
+        with open("roundRobinWrapperData/active_players.txt", 'w') as file:
             file.write(str(number_list))
 
         return Response({'received': number_list, 'sum': sum(number_list)})
@@ -62,7 +63,7 @@ def save_active_player_api(request):
         return Response({'error': 'Invalid JSON array string'}, status=400)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated]) # AllowAny if public
+@permission_classes([IsAuthenticated]) 
 def player_search_id_api(request):
     query = request.GET.get('id', '')
     try:
@@ -84,6 +85,44 @@ def player_search_id_api(request):
 
     return Response(result)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
+def generate_game_api(request):
+    return Response(roundRobin.main())
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
+def reset_game_history_api(request):
+    return Response(roundRobin.reset())
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated]) 
+def add_active_player_api(request):
+    peg_name = request.data.get('peg_name')
+    peg_colour = request.data.get('peg_colour')
+    gender = request.data.get('gender')
+    try:
+        roundRobin.addActivePlayer(peg_name, peg_colour, gender)
+        #jsonData = json.loads(data)
+
+        return Response({'hey':'mate'})
+
+    except json.JSONDecodeError:
+        return Response({'error': 'Invalid JSON array string'}, status=400)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated]) 
+def remove_active_player_api(request):
+    peg_name = request.data.get('peg_name')
+    print(peg_name)
+    try:
+        roundRobin.removeActivePlayer(peg_name)
+        #jsonData = json.loads(data)
+
+        return Response({'hey':'mate'})
+
+    except json.JSONDecodeError:
+        return Response({'error': 'Invalid JSON array string'}, status=400)
 
 
 
