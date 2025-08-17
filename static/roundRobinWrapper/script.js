@@ -6,7 +6,7 @@ function addActivePlayers(peg_name, peg_colour, gender) {
   }
 
 
-  fetch('http://127.0.0.1:8000/projects/roundrobin/api/addactive/', {
+  fetch('https://alanwan.dev/projects/roundrobin/api/addactive/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ function removeActivePlayers(peg_name) {
   }
 
 
-  fetch('http://127.0.0.1:8000/projects/roundrobin/api/removeactive/', {
+  fetch('https://alanwan.dev/projects/roundrobin/api/removeactive/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ document.getElementById('search-box').addEventListener('input', function () {
     return;
   }
 
-  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/players/?q=${encodeURIComponent(query)}`, {
+  fetch(`https://alanwan.dev/projects/roundrobin/api/players/?q=${encodeURIComponent(query)}`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -96,6 +96,7 @@ document.getElementById('search-box').addEventListener('input', function () {
         element.textContent = item.textContent
         element.id = item.id
         element.addEventListener("click", (e) => {
+          document.getElementById("already-added").textContent = e.target.textContent + " has been removed from the queue."
           removeActivePlayers(e.target.textContent)
           e.target.remove()
           updateActivePlayers()
@@ -121,7 +122,7 @@ function saveSelectState() {
 document.getElementById('nCourts').addEventListener('change', saveSelectState);
 
 function restoreActivePlayers() {
-  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/getactive/`, {
+  fetch(`https://alanwan.dev/projects/roundrobin/api/getactive/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -133,7 +134,7 @@ function restoreActivePlayers() {
     active_players_list = data.active_players.replace("[", "").replace("]", "").split(",")
     for (const player_id of active_players_list) {
       let pid = parseInt(player_id.replace(" ", ""))
-      fetch(`http://127.0.0.1:8000/projects/roundrobin/api/player/?id=${encodeURIComponent(pid)}`, {
+      fetch(`https://alanwan.dev/projects/roundrobin/api/player/?id=${encodeURIComponent(pid)}`, {
       headers: {
         'Content-Type': 'application/json',
         'X-Requested-With': 'XMLHttpRequest'
@@ -191,7 +192,7 @@ function generateGame() {
   document.getElementById('games').textContent = "Loading..."
   document.getElementById('genGame').disabled = true
 
-  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/getnextgame/`, {
+  fetch(`https://alanwan.dev/projects/roundrobin/api/getnextgame/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -211,7 +212,7 @@ function generateGame() {
 
 function resetHistory() {
 
-  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/resetHistory/`, {
+  fetch(`https://alanwan.dev/projects/roundrobin/api/resetHistory/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -220,6 +221,8 @@ function resetHistory() {
   .catch(error => {
     console.error('Error:', error);
   })
+
+  document.getElementById('games').textContent = 'Game history successfully cleared.'
 }
 
 function getCookie(name) {
@@ -247,7 +250,7 @@ function updateActivePlayers() {
   console.log(arrayAsString)
 
 
-  fetch('http://127.0.0.1:8000/projects/roundrobin/api/active/', {
+  fetch('https://alanwan.dev/projects/roundrobin/api/active/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
