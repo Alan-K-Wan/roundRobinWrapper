@@ -6,7 +6,7 @@ function addActivePlayers(peg_name, peg_colour, gender) {
   }
 
 
-  fetch('http://127.0.0.1:8000/projects/roundrobin/api/addactive/', {
+  fetch('https://alanwan.dev/projects/roundrobin/api/addactive/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ function removeActivePlayers(peg_name) {
   }
 
 
-  fetch('http://127.0.0.1:8000/projects/roundrobin/api/removeactive/', {
+  fetch('https://alanwan.dev/projects/roundrobin/api/removeactive/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ document.getElementById('search-box').addEventListener('input', function () {
     return;
   }
 
-  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/players/?q=${encodeURIComponent(query)}`, {
+  fetch(`https://alanwan.dev/projects/roundrobin/api/players/?q=${encodeURIComponent(query)}`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -122,7 +122,7 @@ function saveSelectState() {
 document.getElementById('nCourts').addEventListener('change', saveSelectState);
 
 function restoreActivePlayers() {
-  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/getactive/`, {
+  fetch(`https://alanwan.dev/projects/roundrobin/api/getactive/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -178,7 +178,7 @@ function generateGame() {
   document.getElementById('games').textContent = "Loading..."
   document.getElementById('genGame').disabled = true
 
-  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/getnextgame/`, {
+  fetch(`https://alanwan.dev/projects/roundrobin/api/getnextgame/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -198,7 +198,7 @@ function generateGame() {
 
 function resetHistory() {
 
-  fetch(`http://127.0.0.1:8000/projects/roundrobin/api/resetHistory/`, {
+  fetch(`https://alanwan.dev/projects/roundrobin/api/resetHistory/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
