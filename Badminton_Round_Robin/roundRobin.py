@@ -15,6 +15,7 @@ yaml_path = os.path.join(os.path.dirname(__file__), 'config.yml')
 players_path = os.path.join(os.path.dirname(__file__), 'players2024.csv')
 stats_path = os.path.join(os.path.dirname(__file__), 'player_stats.csv')
 state_path = os.path.join(os.path.dirname(__file__), 'state.json')
+active_path = os.path.join(os.path.dirname(__file__), 'active.txt')
 
 with open(yaml_path, "r") as file:
     config = yaml.safe_load(file)
@@ -30,7 +31,9 @@ TEMPERATURE = config.get("TEMPERATURE", 0)
 MAX_TIME = config.get("MAX_TIME", None)  # Default to finding optimal solution if not specified
 DEBUG = config.get("DEBUG", False)
 
-
+def getActivePlayers():
+    df = pd.read_csv(stats_path)
+    return df.to_json(orient='records', indent=4)
 
 def playerScore(colour, gender, temperature=TEMPERATURE):
 

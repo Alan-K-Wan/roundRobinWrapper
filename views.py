@@ -33,12 +33,8 @@ def player_search_api(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated]) 
 def get_active_player_api(request):
-    with open("roundRobinWrapperData/active_players.txt", "r") as file:
-        content = file.read()
-        results = {
-            'active_players': content,
-        }
-        return Response(results)
+    results = roundRobin.getActivePlayers()
+    return Response(results)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
