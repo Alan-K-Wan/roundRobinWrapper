@@ -36,28 +36,6 @@ def get_active_player_api(request):
     results = roundRobin.getActivePlayers()
     return Response(results)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated]) 
-def save_active_player_api(request):
-    array_str = request.data.get('data')
-
-    try:
-        # Parse the string back into a Python list
-        number_list = json.loads(array_str)
-
-        # Optional: Validate it's a list of numbers
-        if not all(isinstance(n, (int, float)) for n in number_list):
-            return Response({'error': 'Invalid number list'}, status=400)
-
-        # Respond or process as needed
-        with open("roundRobinWrapperData/active_players.txt", 'w') as file:
-            file.write(str(number_list))
-
-        return Response({'received': number_list, 'sum': sum(number_list)})
-
-    except json.JSONDecodeError:
-        return Response({'error': 'Invalid JSON array string'}, status=400)
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated]) 
 def player_search_id_api(request):
@@ -94,17 +72,19 @@ def reset_game_history_api(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 
 def add_active_player_api(request):
+    active_players = [player['peg_name'] for player in json.loads(roundRobin.getActivePlayers())]
+    if request.data.get('peg_name') in active_players:
+        return Response({'res':'player already added', 'code':1})
     peg_name = request.data.get('peg_name')
     peg_colour = request.data.get('peg_colour')
     gender = request.data.get('gender')
     try:
         roundRobin.addActivePlayer(peg_name, peg_colour, gender)
-        #jsonData = json.loads(data)
 
-        return Response({'hey':'mate'})
+        return Response({'res':'player added to queue successfully.', 'code':0})
 
     except json.JSONDecodeError:
-        return Response({'error': 'Invalid JSON array string'}, status=400)
+        return Response({'error': 'Invalid JSON array string', 'code':2}, status=400)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated]) 

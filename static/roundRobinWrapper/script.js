@@ -6,7 +6,7 @@ function addActivePlayers(peg_name, peg_colour, gender) {
   }
 
 
-  fetch('https://alanwan.dev/projects/roundrobin/api/addactive/', {
+  fetch(origin + '/projects/roundrobin/api/addactive/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,10 +17,27 @@ function addActivePlayers(peg_name, peg_colour, gender) {
   .then(response => response.json())
   .then(data => {
     console.log('Response from backend:', data);
-
+    if (data.code == 0) {
+      let active = document.getElementById('active-players')
+      const element = document.createElement('li')
+      element.textContent = peg_name
+      element.setAttribute("gender", gender)
+      element.setAttribute("peg_colour", peg_colour)
+      element.addEventListener("click", (e) => {
+        document.getElementById("already-added").textContent = e.target.textContent + " has been removed from the queue."
+        removeActivePlayers(e.target.textContent)
+        e.target.remove()
+      })
+      active.appendChild(element)
+      document.getElementById("already-added").textContent = ""
+    }
+    else {
+      document.getElementById("already-added").textContent = peg_name + " is already in the queue"
+    }
   })
   .catch(error => {
     console.error('Error sending array:', error);
+    document.getElementById("already-added").textContent = error
   });
 
 }
@@ -31,7 +48,7 @@ function removeActivePlayers(peg_name) {
   }
 
 
-  fetch('https://alanwan.dev/projects/roundrobin/api/removeactive/', {
+  fetch(origin + '/projects/roundrobin/api/removeactive/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -42,10 +59,11 @@ function removeActivePlayers(peg_name) {
   .then(response => response.json())
   .then(data => {
     console.log('Response from backend:', data);
-
+    document.getElementById("already-added").textContent = peg_name + " has been removed from the queue."
   })
   .catch(error => {
     console.error('Error sending array:', error);
+    document.getElementById("already-added").textContent = "failed to remove " + peg_name + " from the queue."
   });
 
 }
@@ -58,7 +76,7 @@ document.getElementById('search-box').addEventListener('input', function () {
     return;
   }
 
-  fetch(`https://alanwan.dev/projects/roundrobin/api/players/?q=${encodeURIComponent(query)}`, {
+  fetch(origin + `/projects/roundrobin/api/players/?q=${encodeURIComponent(query)}`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -81,28 +99,7 @@ document.getElementById('search-box').addEventListener('input', function () {
       item.setAttribute("gender", player.gender)
       item.setAttribute("peg_colour", player.peg_colour)
       item.addEventListener("click", (e) => {
-        let active = document.getElementById('active-players')
-        for (let active_player of active.children) {
-          if(active_player.textContent == item.textContent) {
-            console.log("already active")
-            document.getElementById("already-added").textContent = active_player.textContent + " is already in queue!"
-            return
-          }
-        }
-        //console.log(e.target.getAttribute('gender'))
         addActivePlayers(e.target.textContent, e.target.getAttribute('peg_colour'), e.target.getAttribute('gender'))
-        document.getElementById("already-added").textContent = ""
-        const element = document.createElement('li')
-        element.textContent = item.textContent
-        element.id = item.id
-        element.addEventListener("click", (e) => {
-          document.getElementById("already-added").textContent = e.target.textContent + " has been removed from the queue."
-          removeActivePlayers(e.target.textContent)
-          e.target.remove()
-          //updateActivePlayers()
-        })
-        active.appendChild(element)
-        //updateActivePlayers()
       })
       list.appendChild(item);
     });
@@ -122,7 +119,7 @@ function saveSelectState() {
 document.getElementById('nCourts').addEventListener('change', saveSelectState);
 
 function restoreActivePlayers() {
-  fetch(`https://alanwan.dev/projects/roundrobin/api/getactive/`, {
+  fetch(origin + `/projects/roundrobin/api/getactive/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -130,7 +127,6 @@ function restoreActivePlayers() {
   })
   .then(res => res.json())
   .then(data => {
-    //console.log(data.active_players.replace("[", "").replace("]", "").split(","))
     let jsonData = JSON.parse(data)
     for (const player of jsonData) {
       const list = document.getElementById('active-players')
@@ -140,7 +136,6 @@ function restoreActivePlayers() {
       element.setAttribute("gender", player.gender)
       element.setAttribute("peg_colour", player.peg_colour)
       element.addEventListener("click", (e) => {
-        document.getElementById("already-added").textContent = e.target.textContent + " has been removed from the queue."
         removeActivePlayers(e.target.textContent)
         e.target.remove()
       })
@@ -178,7 +173,7 @@ function generateGame() {
   document.getElementById('games').textContent = "Loading..."
   document.getElementById('genGame').disabled = true
 
-  fetch(`https://alanwan.dev/projects/roundrobin/api/getnextgame/`, {
+  fetch(origin + `/projects/roundrobin/api/getnextgame/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -193,12 +188,13 @@ function generateGame() {
   })
   .catch(error => {
     console.error('Search failed:', error);
+    document.getElementById('games').textContent = JSON.stringify(data)
   })
 }
 
 function resetHistory() {
 
-  fetch(`https://alanwan.dev/projects/roundrobin/api/resetHistory/`, {
+  fetch(origin + `/projects/roundrobin/api/resetHistory/`, {
     headers: {
       'Content-Type': 'application/json',
       'X-Requested-With': 'XMLHttpRequest'
@@ -206,55 +202,27 @@ function resetHistory() {
   })
   .catch(error => {
     console.error('Error:', error);
+    document.getElementById('games').textContent = 'There was an error clearing the game history.'
+    return
   })
 
   document.getElementById('games').textContent = 'Game history successfully cleared.'
 }
 
 function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
       }
     }
-    return cookieValue;
   }
-
-// function updateActivePlayers() {
-//   let currently_active = document.getElementById('active-players').children
-//   let id_array = []
-//   for (const child of currently_active) {
-//     id_array.push(parseInt(child.id))
-//   }
-//   const arrayAsString = JSON.stringify(id_array);  // e.g., "[1,2,3]"
-//   console.log(arrayAsString)
-
-
-//   fetch('http://127.0.0.1:8000/projects/roundrobin/api/active/', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       'X-CSRFToken': getCookie('csrftoken')  // Required by Django
-//     },
-//     body: JSON.stringify({ data: arrayAsString })
-//   })
-//   .then(response => response.json())
-//   .then(data => {
-//     console.log('Response from backend:', data);
-
-//   })
-//   .catch(error => {
-//     console.error('Error sending array:', error);
-//   });
-
-// }
-
+  return cookieValue;
+}
 
 
 // Call the function when the page loads
