@@ -110,13 +110,32 @@ document.getElementById('search-box').addEventListener('input', function () {
 });
 
 function saveSelectState() {
-  const selectElement = document.getElementById('nCourts'); // Get the select element
-  const selectedValue = selectElement.value; // Get the selected value
-  document.cookie = `mySelectState=${selectedValue}; expires=Thu, 18 Dec 2026 12:00:00 UTC; path=/`; // Set the cookie
+  const courtsValue = document.getElementById('nCourts').value
+  const minuteElement = document.getElementById('minutes'); // Get the select element
+  const minuteValue = minuteElement.value; // Get the selected value
+  document.cookie = `minuteState=${minuteValue}; expires=Thu, 18 Dec 2026 12:00:00 UTC; path=/`; // Set the cookie
+
+  fetch(origin + '/projects/roundrobin/api/setconfig/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')  // Required by Django
+    },
+    body: JSON.stringify({'nCourts':courtsValue})
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Response from backend:', data);
+  })
+  .catch(error => {
+    console.error('Error sending array:', error);
+  });
 }
 
 // Attach an event listener to the select element
 document.getElementById('nCourts').addEventListener('change', saveSelectState);
+document.getElementById('minutes').addEventListener('change', saveSelectState);
+
 
 function restoreActivePlayers() {
   fetch(origin + `/projects/roundrobin/api/getactive/`, {
@@ -147,21 +166,40 @@ function restoreActivePlayers() {
   })
 }
 
+function restoreConfig() {
+  fetch(origin + `/projects/roundrobin/api/getconfig/`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+    courtCount = parseInt(data.courtCount)
+    document.getElementById('nCourts').value = courtCount
+  })
+  .catch(error => {
+    console.error('Search failed:', error);
+  })
+}
+
 function restoreSelectState() {
   const cookies = document.cookie.split(';'); // Get all cookies and split them
-  let selectState = null;
+  let minuteState = null;
 
   for (let i = 0; i < cookies.length; i++) {
     let cookie = cookies[i].trim();
-    if (cookie.startsWith('mySelectState=')) {
-      selectState = cookie.substring('mySelectState='.length);
+    if (cookie.startsWith('minuteState=')) {
+      minuteState = cookie.substring('minuteState='.length);
       break;
     }
   }
 
-  if (selectState) {
-    document.getElementById('nCourts').value = selectState; // Set the selected value
+  if (minuteState) {
+    document.getElementById('minutes').value = minuteState; // Set the selected value
   }
+
+  restoreConfig()
 
   restoreActivePlayers()
 

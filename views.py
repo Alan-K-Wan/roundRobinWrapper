@@ -100,6 +100,23 @@ def remove_active_player_api(request):
     except json.JSONDecodeError:
         return Response({'error': 'Invalid JSON array string'}, status=400)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated]) 
+def set_config_api(request):
+    nCourts = request.data.get('nCourts')
+    try:
+        roundRobin.updateConfig(nCourts)
+
+        return Response({'hey':'mate'})
+
+    except json.JSONDecodeError:
+        return Response({'error': 'Invalid JSON array string'}, status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
+def get_config_api(request):
+    return Response(roundRobin.getConfig())
+
 
 
 

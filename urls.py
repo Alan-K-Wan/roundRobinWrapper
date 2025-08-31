@@ -13,4 +13,6 @@ urlpatterns = [
     path("api/resetHistory/", views.reset_game_history_api, name="reset_game_history_api"),
     path("api/addactive/", views.add_active_player_api, name="add_active_player_api"),
     path("api/removeactive/", views.remove_active_player_api, name="remove_active_player_api"),
+    path("api/setconfig/", views.set_config_api, name="set_config_api"),
+    path("api/getconfig/", views.get_config_api, name="get_config_api"),
 ]

@@ -26,17 +26,28 @@
     <ul id="active-players">
     </ul>
     <h1>2. Set game parameters</h1>
-    <label for="nCourts">Number of courts available (not implemented - defaults to 5): </label>
+    <label for="nCourts">Number of courts available: </label>
     <select name="nCourts" id="nCourts">
-        <option value="option1">1</option>
-        <option value="option2">2</option>
-        <option value="option3">3</option>
-        <option value="option4">4</option>
-        <option value="option5">5</option>
-        <option value="option6">6</option>
-        <option value="option7">7</option>
-        <option value="option8">8</option>
-        <option value="option9">9</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+    </select><br>
+    <label for="minutes">Round length in minutes: </label>
+    <select name="minutes" id="minutes">
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
     </select>
     <h1>3. Generate game</h1>
     <button id="genGame" onclick="generateGame()">Generate</button>

@@ -16,6 +16,7 @@ players_path = os.path.join(os.path.dirname(__file__), 'players2024.csv')
 stats_path = os.path.join(os.path.dirname(__file__), 'player_stats.csv')
 state_path = os.path.join(os.path.dirname(__file__), 'state.json')
 active_path = os.path.join(os.path.dirname(__file__), 'active.txt')
+config_path = os.path.join(os.path.dirname(__file__), 'config.json')
 
 with open(yaml_path, "r") as file:
     config = yaml.safe_load(file)
@@ -30,6 +31,18 @@ GENDER_SCORE_MODIFIER = config.get("GENDER_SCORE_MODIFIER", -10)
 TEMPERATURE = config.get("TEMPERATURE", 0)
 MAX_TIME = config.get("MAX_TIME", None)  # Default to finding optimal solution if not specified
 DEBUG = config.get("DEBUG", False)
+
+def getConfig():
+    with open(config_path, "r") as f:
+        data = json.load(f)
+    return data
+
+def updateConfig(value):
+    with open(config_path, "r") as f:
+        data = json.load(f)
+    data["courtCount"] = value
+    with open(config_path, "w") as f:
+        json.dump(data, f, indent=4)
 
 def getActivePlayers():
     df = pd.read_csv(stats_path)
