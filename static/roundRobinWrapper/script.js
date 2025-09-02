@@ -1,3 +1,28 @@
+function startRound() {
+  let currentTime = new Date().getTime()
+  fetch(origin + '/projects/roundrobin/api/settimer/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken')  // Required by Django
+    },
+    body: JSON.stringify({'currentTime':currentTime})
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Response from backend:', data);
+    if (data.res == 1) {
+      console.log("current game is not over")
+      document.getElementById('roundMessage').innerText = "Cannot start another round until the current round is over"
+      return
+    }
+    loadTimer()
+  })
+  .catch(error => {
+    console.error('Error sending array:', error);
+  });
+}
+
 function addActivePlayers(peg_name, peg_colour, gender) {
   let jsonData = {
     'peg_name': peg_name,
@@ -111,9 +136,7 @@ document.getElementById('search-box').addEventListener('input', function () {
 
 function saveSelectState() {
   const courtsValue = document.getElementById('nCourts').value
-  const minuteElement = document.getElementById('minutes'); // Get the select element
-  const minuteValue = minuteElement.value; // Get the selected value
-  document.cookie = `minuteState=${minuteValue}; expires=Thu, 18 Dec 2026 12:00:00 UTC; path=/`; // Set the cookie
+  const minuteValue = document.getElementById('minutes').value // Get the select element
 
   fetch(origin + '/projects/roundrobin/api/setconfig/', {
     method: 'POST',
@@ -121,7 +144,7 @@ function saveSelectState() {
       'Content-Type': 'application/json',
       'X-CSRFToken': getCookie('csrftoken')  // Required by Django
     },
-    body: JSON.stringify({'nCourts':courtsValue})
+    body: JSON.stringify({'nCourts':courtsValue, 'minutes':minuteValue})
   })
   .then(response => response.json())
   .then(data => {
@@ -176,7 +199,9 @@ function restoreConfig() {
   .then(res => res.json())
   .then(data => {
     courtCount = parseInt(data.courtCount)
+    minutes = parseInt(data.minutes)
     document.getElementById('nCourts').value = courtCount
+    document.getElementById('minutes').value = minutes
   })
   .catch(error => {
     console.error('Search failed:', error);
@@ -203,13 +228,13 @@ function restoreSelectState() {
 
   restoreActivePlayers()
 
+  loadTimer()
   
 }
 
 function generateGame() {
   
   document.getElementById('games').textContent = "Loading..."
-  document.getElementById('genGame').disabled = true
 
   fetch(origin + `/projects/roundrobin/api/getnextgame/`, {
     headers: {
@@ -221,7 +246,6 @@ function generateGame() {
   .then(data => {
     console.log(data)
     document.getElementById('games').textContent = JSON.stringify(data)
-    document.getElementById('genGame').disabled = false
 
   })
   .catch(error => {
@@ -238,13 +262,17 @@ function resetHistory() {
       'X-Requested-With': 'XMLHttpRequest'
     }
   })
+  .then(res => res.json() )
+  .then(data => {
+    console.log(data)
+    document.getElementById('games').textContent = JSON.stringify(data)
+  })
   .catch(error => {
     console.error('Error:', error);
     document.getElementById('games').textContent = 'There was an error clearing the game history.'
     return
   })
 
-  document.getElementById('games').textContent = 'Game history successfully cleared.'
 }
 
 function getCookie(name) {
@@ -262,6 +290,44 @@ function getCookie(name) {
   return cookieValue;
 }
 
+function loadTimer() {
+fetch(origin + `/projects/roundrobin/api/gettimer/`, {
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  })
+  .then(res => res.json())
+  .then(data => {
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = endTime - now;
+
+    if (distance <= 0) {
+      clearInterval(timer);
+      document.getElementById("countdown").innerHTML = "⏰ Time's up!";
+      return;
+    }
+
+    const minutes = Math.floor((distance / 1000) / 60);
+    const seconds = Math.ceil((distance / 1000) % 60);
+    const displayMinutes = seconds === 60 ? minutes + 1 : minutes;
+    const displaySeconds = seconds === 60 ? 0 : seconds;
+
+    // Format with leading zero
+    const display = `${displayMinutes}:${displaySeconds < 10 ? "0" : ""}${displaySeconds}`;
+    document.getElementById("countdown").textContent = display;
+  }
+
+  let endTime = data.endTime
+  const timer = setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  })
+  .catch(error => {
+    console.error('Search failed:', error);
+  })
+}
 
 // Call the function when the page loads
 window.onload = restoreSelectState;

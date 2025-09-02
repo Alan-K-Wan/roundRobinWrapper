@@ -104,10 +104,11 @@ def remove_active_player_api(request):
 @permission_classes([IsAuthenticated]) 
 def set_config_api(request):
     nCourts = request.data.get('nCourts')
+    minutes = request.data.get('minutes')
     try:
-        roundRobin.updateConfig(nCourts)
+        roundRobin.updateConfig(nCourts, minutes)
 
-        return Response({'hey':'mate'})
+        return Response({'update':'success'})
 
     except json.JSONDecodeError:
         return Response({'error': 'Invalid JSON array string'}, status=400)
@@ -116,6 +117,27 @@ def set_config_api(request):
 @permission_classes([IsAuthenticated]) 
 def get_config_api(request):
     return Response(roundRobin.getConfig())
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated]) 
+def set_timer_api(request):
+    currentTime = request.data.get('currentTime')
+    try:
+        if currentTime < roundRobin.getTimer()['endTime']:
+            print("current game not over")
+            return Response({'res':1})
+
+        roundRobin.setTimer(currentTime)
+
+        return Response({'res':0})
+
+    except json.JSONDecodeError:
+        return Response({'error': 'Invalid JSON array string'}, status=400)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated]) 
+def get_timer_api(request):
+    return Response(roundRobin.getTimer())
 
 
 

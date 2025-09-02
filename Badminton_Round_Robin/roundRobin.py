@@ -25,22 +25,37 @@ with open(yaml_path, "r") as file:
 
 
 SCORE_DIFF_LIMIT = config.get("SCORE_DIFF_LIMIT")  # Default to 40 if not specified in config
-NUM_COURTS = config.get("NUM_COURTS", 5)  # Default to 5 if not specified in config
+#NUM_COURTS = config.get("NUM_COURTS", 5)  # Default to 5 if not specified in config
 SKILL_SCORES = config.get("SKILL_SCORES")
 GENDER_SCORE_MODIFIER = config.get("GENDER_SCORE_MODIFIER", -10)
 TEMPERATURE = config.get("TEMPERATURE", 0)
 MAX_TIME = config.get("MAX_TIME", None)  # Default to finding optimal solution if not specified
 DEBUG = config.get("DEBUG", False)
 
+def getTimer():
+    with open(state_path, "r") as f:
+        data = json.load(f)
+    return {'endTime':data['matchEndTime']}
+
 def getConfig():
     with open(config_path, "r") as f:
         data = json.load(f)
     return data
 
-def updateConfig(value):
+def setTimer(endTime):
+    with open(state_path, "r") as f:
+        data = json.load(f)
+    offset = int(getConfig()['minutes']) * 60 * 1000
+    data["matchEndTime"] = int(endTime) + offset
+    with open(state_path, "w") as f:
+        json.dump(data, f, indent=4)
+
+def updateConfig(courtCount, minutes):
     with open(config_path, "r") as f:
         data = json.load(f)
-    data["courtCount"] = value
+    data["courtCount"] = courtCount
+    data["minutes"] = minutes
+
     with open(config_path, "w") as f:
         json.dump(data, f, indent=4)
 
@@ -93,6 +108,12 @@ def removeActivePlayer(peg_name):
     )
 
 def reset():
+    with open(state_path, 'r') as file:
+        data = json.load(file)
+
+    if data['generating']:
+        return "please wait till game has finished generating"
+
     with open(state_path, 'r') as f:
         data = json.load(f)
         data['gameCount'] = 0
@@ -111,7 +132,21 @@ def reset():
         f"{output_file}", index=False
     )
 
+    return "game history successfully cleared"
+
 def main():
+
+    # open state file and check if a game is already generating
+    with open(state_path, 'r') as file:
+        data = json.load(file)
+
+    if data['generating']:
+        return "a game is already generating"
+
+    data['generating'] = True
+
+    with open(state_path, 'w') as file:
+        json.dump(data, file, indent=4)
 
     def generate_valid_matches(players):
         # players: list of (player_name, score)
@@ -261,6 +296,10 @@ def main():
 
 
     def generate_game(df, players, game_count):
+        with open(config_path, "r") as conf:
+            jsonConfig = json.load(conf)
+            courts = int(jsonConfig['courtCount'])
+
         play_priority = df.set_index("peg_name")[
             "play_priority"
         ].to_dict()  # get play priority from df
@@ -308,7 +347,7 @@ def main():
     #players = df.to_dict("records")
     stats = df_stat.to_dict("records")
 
-    courts = NUM_COURTS
+    # courts = NUM_COURTS
     played_matches = set()  # no history yet
 
 
@@ -364,6 +403,11 @@ def main():
         f"{output_file}", index=False
     )
     print(f"Player statistics saved to {output_file}")
+
+    data['generating'] = False
+
+    with open(state_path, 'w') as file:
+        json.dump(data, file, indent=4)
 
     return output
 
