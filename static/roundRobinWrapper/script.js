@@ -234,7 +234,8 @@ function restoreSelectState() {
 
 function generateGame() {
   
-  document.getElementById('games').textContent = "Loading..."
+  document.getElementById('loading').textContent = "Loading..."
+  document.querySelector('.games').innerHTML = ""
 
   fetch(origin + `/projects/roundrobin/api/getnextgame/`, {
     headers: {
@@ -245,8 +246,60 @@ function generateGame() {
   .then(res => res.json() )
   .then(data => {
     console.log(data)
-    document.getElementById('games').textContent = JSON.stringify(data)
-
+    document.getElementById('loading').textContent = ""
+    nextGames = document.querySelector('.games')
+    for (let game of data.games) {
+      let court = document.createElement('div')
+      court.classList.add("court")
+      let topLeft = document.createElement('div')
+      topLeft.classList.add("top-left")
+      topLeft.innerText = "Court"
+      court.appendChild(topLeft)
+      let courtNumber = document.createElement('div')
+      courtNumber.classList.add("court-number")
+      courtNumber.innerText = game.courtNumber
+      court.appendChild(courtNumber)
+      let bottomLeft = document.createElement('div')
+      bottomLeft.classList.add("bottom-left")
+      bottomLeft.innerText = "Court"
+      court.appendChild(bottomLeft)
+      let teamOne = document.createElement('div')
+      teamOne.classList.add("team-one", "team")
+      let player = document.createElement('div')
+      player.classList.add("player")
+      player.innerText = game.teamOne[0]
+      teamOne.appendChild(player)
+      player = document.createElement('div')
+      player.classList.add("player")
+      player.innerText = game.teamOne[1]
+      teamOne.appendChild(player)
+      court.appendChild(teamOne)
+      let teamTwo = document.createElement('div')
+      teamTwo.classList.add("team-two", "team")
+      player = document.createElement('div')
+      player.classList.add("player")
+      player.innerText = game.teamTwo[0]
+      teamTwo.appendChild(player)
+      player = document.createElement('div')
+      player.classList.add("player")
+      player.innerText = game.teamTwo[1]
+      teamTwo.appendChild(player)
+      court.appendChild(teamTwo)
+      let scores = document.createElement('div')
+      scores.classList.add('scores')
+      let teamOneScore = document.createElement('input')
+      teamOneScore.classList.add('team-one-score', 'score')
+      teamOneScore.type = "text"
+      teamOneScore.placeholder = "0"
+      scores.appendChild(teamOneScore)
+      let teamTwoScore = document.createElement('input')
+      teamTwoScore.classList.add('team-two-score', 'score')
+      teamTwoScore.type = "text"
+      teamTwoScore.placeholder = "0"
+      scores.appendChild(teamTwoScore)
+      court.appendChild(scores)
+      nextGames.appendChild(court)
+    }
   })
   .catch(error => {
     console.error('Search failed:', error);

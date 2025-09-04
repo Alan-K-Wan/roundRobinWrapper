@@ -326,7 +326,6 @@ def main():
         # print(data['playedMatches'])
 
         print(f"Removed {len(played_matches)} matches from pool.")
-
         return matches
 
     ### Program Start ###
@@ -372,6 +371,7 @@ def main():
     # )
 
     matches = generate_game(df_stat, stats, data['gameCount'])
+    print("ASDASD", matches)
     # print(matches)
 
     with open(state_path, 'r') as f:
@@ -409,7 +409,19 @@ def main():
     with open(state_path, 'w') as file:
         json.dump(data, file, indent=4)
 
-    return output
+    outputJson = {'games':[]}
+    courts = ["4", "5", "8", "9", "10", "X", "Y", "Z", "$"]
+
+    for index, match in enumerate(matches):
+        court = {}
+        court['courtNumber'] = courts[index]
+        court['teamOne'] = [match[0], match[1]]
+        court['teamTwo'] = [match[2], match[3]]
+        outputJson['games'].append(court)
+    
+    outputJson['sittingOut'] = sitting_out
+
+    return outputJson
 
 
 if __name__ == "__main__":
