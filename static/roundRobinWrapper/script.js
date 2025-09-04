@@ -303,7 +303,7 @@ function generateGame() {
   })
   .catch(error => {
     console.error('Search failed:', error);
-    document.getElementById('games').textContent = JSON.stringify(data)
+    document.getElementById('loading').textContent = JSON.stringify(data)
   })
 }
 
@@ -318,11 +318,11 @@ function resetHistory() {
   .then(res => res.json() )
   .then(data => {
     console.log(data)
-    document.getElementById('games').textContent = JSON.stringify(data)
+    document.getElementById('loading').textContent = JSON.stringify(data)
   })
   .catch(error => {
     console.error('Error:', error);
-    document.getElementById('games').textContent = 'There was an error clearing the game history.'
+    document.getElementById('loading').textContent = 'There was an error clearing the game history.'
     return
   })
 
