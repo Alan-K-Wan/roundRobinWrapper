@@ -307,7 +307,7 @@ function generateGame() {
   })
   .catch(error => {
     console.error('Search failed:', error);
-    document.getElementById('loading').textContent = JSON.stringify(data)
+    document.getElementById('loading').textContent = JSON.stringify(error)
   })
 }
 
