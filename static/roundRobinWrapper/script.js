@@ -233,7 +233,7 @@ function restoreSelectState() {
 }
 
 function generateGame() {
-  
+
   document.getElementById('loading').textContent = "Loading..."
   document.querySelector('.games').innerHTML = ""
 
@@ -246,6 +246,10 @@ function generateGame() {
   .then(res => res.json() )
   .then(data => {
     console.log(data)
+    if (data.code == 1) {
+      document.getElementById('loading').textContent = data.res
+      return data.res
+    }
     document.getElementById('loading').textContent = ""
     nextGames = document.querySelector('.games')
     for (let game of data.games) {

@@ -141,7 +141,7 @@ def main():
         data = json.load(file)
 
     if data['generating']:
-        return "a game is already generating"
+        return {"res":"a game is already generating", "code":1}
 
     data['generating'] = True
 
