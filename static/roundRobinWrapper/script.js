@@ -357,102 +357,102 @@ sessionSocket.onclose = function(e) {
     console.error('Chat socket closed unexpectedly');
 };
 
-const playerListSocket = new WebSocket(
-      'wss://'
-      + window.location.host
-      + '/ws/playerList/'
-);
+// const playerListSocket = new WebSocket(
+//       'wss://'
+//       + window.location.host
+//       + '/ws/playerList/'
+// );
 
-playerListSocket.onmessage = function(e) {
-    const data = JSON.parse(JSON.parse(e.data));
-    const list = document.getElementById('active-players')
-    list.innerHTML = ""
-    // console.log(data)
-    for (const player of data) {
-      // console.log(player)
-      const element = document.createElement('li')
-      element.textContent = player.peg_name
-      // element.id = player.id
-      element.setAttribute("gender", player.gender)
-      element.setAttribute("peg_colour", player.peg_colour)
-      element.addEventListener("click", (e) => {
-        removeActivePlayers(e.target.textContent)
-        e.target.remove()
-      })
-      list.appendChild(element)
-    }
-};
+// playerListSocket.onmessage = function(e) {
+//     const data = JSON.parse(JSON.parse(e.data));
+//     const list = document.getElementById('active-players')
+//     list.innerHTML = ""
+//     // console.log(data)
+//     for (const player of data) {
+//       // console.log(player)
+//       const element = document.createElement('li')
+//       element.textContent = player.peg_name
+//       // element.id = player.id
+//       element.setAttribute("gender", player.gender)
+//       element.setAttribute("peg_colour", player.peg_colour)
+//       element.addEventListener("click", (e) => {
+//         removeActivePlayers(e.target.textContent)
+//         e.target.remove()
+//       })
+//       list.appendChild(element)
+//     }
+// };
 
-playerListSocket.onclose = function(e) {
-    console.error('Chat socket closed unexpectedly');
-};
+// playerListSocket.onclose = function(e) {
+//     console.error('Chat socket closed unexpectedly');
+// };
 
-const currentGamesSocket = new WebSocket(
-      'wss://'
-      + window.location.host
-      + '/ws/currentGames/'
-  );
+// const currentGamesSocket = new WebSocket(
+//       'wss://'
+//       + window.location.host
+//       + '/ws/currentGames/'
+//   );
 
-currentGamesSocket.onmessage = function(e) {
-    const data = JSON.parse(e.data);
-    let currentGames = data.currentGames.games
-    document.getElementById('loading').textContent = ""
-    nextGames = document.querySelector('.games')
-    nextGames.innerHTML = ""
-    for (let game of currentGames) {
-      let court = document.createElement('div')
-      court.classList.add("court")
-      let topLeft = document.createElement('div')
-      topLeft.classList.add("top-left")
-      topLeft.innerText = "Court"
-      court.appendChild(topLeft)
-      let courtNumber = document.createElement('div')
-      courtNumber.classList.add("court-number")
-      courtNumber.innerText = game.courtNumber
-      court.appendChild(courtNumber)
-      let bottomLeft = document.createElement('div')
-      bottomLeft.classList.add("bottom-left")
-      bottomLeft.innerText = "Court"
-      court.appendChild(bottomLeft)
-      let teamOne = document.createElement('div')
-      teamOne.classList.add("team-one", "team")
-      let player = document.createElement('div')
-      player.classList.add("player")
-      player.innerText = game.teamOne[0]
-      teamOne.appendChild(player)
-      player = document.createElement('div')
-      player.classList.add("player")
-      player.innerText = game.teamOne[1]
-      teamOne.appendChild(player)
-      court.appendChild(teamOne)
-      let teamTwo = document.createElement('div')
-      teamTwo.classList.add("team-two", "team")
-      player = document.createElement('div')
-      player.classList.add("player")
-      player.innerText = game.teamTwo[0]
-      teamTwo.appendChild(player)
-      player = document.createElement('div')
-      player.classList.add("player")
-      player.innerText = game.teamTwo[1]
-      teamTwo.appendChild(player)
-      court.appendChild(teamTwo)
-      let scores = document.createElement('div')
-      scores.classList.add('scores')
-      let teamOneScore = document.createElement('input')
-      teamOneScore.classList.add('team-one-score', 'score')
-      teamOneScore.type = "text"
-      teamOneScore.placeholder = "0"
-      scores.appendChild(teamOneScore)
-      let teamTwoScore = document.createElement('input')
-      teamTwoScore.classList.add('team-two-score', 'score')
-      teamTwoScore.type = "text"
-      teamTwoScore.placeholder = "0"
-      scores.appendChild(teamTwoScore)
-      court.appendChild(scores)
-      nextGames.appendChild(court)
-    }
-};
+// currentGamesSocket.onmessage = function(e) {
+//     const data = JSON.parse(e.data);
+//     let currentGames = data.currentGames.games
+//     document.getElementById('loading').textContent = ""
+//     nextGames = document.querySelector('.games')
+//     nextGames.innerHTML = ""
+//     for (let game of currentGames) {
+//       let court = document.createElement('div')
+//       court.classList.add("court")
+//       let topLeft = document.createElement('div')
+//       topLeft.classList.add("top-left")
+//       topLeft.innerText = "Court"
+//       court.appendChild(topLeft)
+//       let courtNumber = document.createElement('div')
+//       courtNumber.classList.add("court-number")
+//       courtNumber.innerText = game.courtNumber
+//       court.appendChild(courtNumber)
+//       let bottomLeft = document.createElement('div')
+//       bottomLeft.classList.add("bottom-left")
+//       bottomLeft.innerText = "Court"
+//       court.appendChild(bottomLeft)
+//       let teamOne = document.createElement('div')
+//       teamOne.classList.add("team-one", "team")
+//       let player = document.createElement('div')
+//       player.classList.add("player")
+//       player.innerText = game.teamOne[0]
+//       teamOne.appendChild(player)
+//       player = document.createElement('div')
+//       player.classList.add("player")
+//       player.innerText = game.teamOne[1]
+//       teamOne.appendChild(player)
+//       court.appendChild(teamOne)
+//       let teamTwo = document.createElement('div')
+//       teamTwo.classList.add("team-two", "team")
+//       player = document.createElement('div')
+//       player.classList.add("player")
+//       player.innerText = game.teamTwo[0]
+//       teamTwo.appendChild(player)
+//       player = document.createElement('div')
+//       player.classList.add("player")
+//       player.innerText = game.teamTwo[1]
+//       teamTwo.appendChild(player)
+//       court.appendChild(teamTwo)
+//       let scores = document.createElement('div')
+//       scores.classList.add('scores')
+//       let teamOneScore = document.createElement('input')
+//       teamOneScore.classList.add('team-one-score', 'score')
+//       teamOneScore.type = "text"
+//       teamOneScore.placeholder = "0"
+//       scores.appendChild(teamOneScore)
+//       let teamTwoScore = document.createElement('input')
+//       teamTwoScore.classList.add('team-two-score', 'score')
+//       teamTwoScore.type = "text"
+//       teamTwoScore.placeholder = "0"
+//       scores.appendChild(teamTwoScore)
+//       court.appendChild(scores)
+//       nextGames.appendChild(court)
+//     }
+// };
 
-currentGamesSocket.onclose = function(e) {
-    console.error('Chat socket closed unexpectedly');
-};
+// currentGamesSocket.onclose = function(e) {
+//     console.error('Chat socket closed unexpectedly');
+// };
