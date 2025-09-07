@@ -343,7 +343,7 @@ fetch(origin + `/projects/roundrobin/api/gettimer/`, {
 window.onload = restoreSelectState;
 
 const sessionSocket = new WebSocket(
-      'ws://'
+      'wss://'
       + window.location.host
       + '/ws/session/'
   );
@@ -358,7 +358,7 @@ sessionSocket.onclose = function(e) {
 };
 
 const playerListSocket = new WebSocket(
-      'ws://'
+      'wss://'
       + window.location.host
       + '/ws/playerList/'
 );
@@ -388,7 +388,7 @@ playerListSocket.onclose = function(e) {
 };
 
 const currentGamesSocket = new WebSocket(
-      'ws://'
+      'wss://'
       + window.location.host
       + '/ws/currentGames/'
   );
