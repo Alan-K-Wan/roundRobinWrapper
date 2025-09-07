@@ -27,69 +27,74 @@ function addActivePlayers(peg_name, peg_colour, gender) {
   let jsonData = {
     'peg_name': peg_name,
     'peg_colour': peg_colour,
-    'gender': gender
+    'gender': gender,
+    'action': 'add'
   }
 
+  playerListSocket.send(JSON.stringify(jsonData)) 
 
-  fetch(origin + '/projects/roundrobin/api/addactive/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': getCookie('csrftoken')  // Required by Django
-    },
-    body: JSON.stringify(jsonData)
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Response from backend:', data);
-    if (data.code == 0) {
-      let active = document.getElementById('active-players')
-      const element = document.createElement('li')
-      element.textContent = peg_name
-      element.setAttribute("gender", gender)
-      element.setAttribute("peg_colour", peg_colour)
-      element.addEventListener("click", (e) => {
-        document.getElementById("already-added").textContent = e.target.textContent + " has been removed from the queue."
-        removeActivePlayers(e.target.textContent)
-        e.target.remove()
-      })
-      active.appendChild(element)
-      document.getElementById("already-added").textContent = ""
-    }
-    else {
-      document.getElementById("already-added").textContent = peg_name + " is already in the queue"
-    }
-  })
-  .catch(error => {
-    console.error('Error sending array:', error);
-    document.getElementById("already-added").textContent = error
-  });
+  // fetch(origin + '/projects/roundrobin/api/addactive/', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     'X-CSRFToken': getCookie('csrftoken')  // Required by Django
+  //   },
+  //   body: JSON.stringify(jsonData)
+  // })
+  // .then(response => response.json())
+  // .then(data => {
+  //   console.log('Response from backend:', data);
+  //   if (data.code == 0) {
+  //     let active = document.getElementById('active-players')
+  //     const element = document.createElement('li')
+  //     element.textContent = peg_name
+  //     element.setAttribute("gender", gender)
+  //     element.setAttribute("peg_colour", peg_colour)
+  //     element.addEventListener("click", (e) => {
+  //       document.getElementById("already-added").textContent = e.target.textContent + " has been removed from the queue."
+  //       removeActivePlayers(e.target.textContent)
+  //       e.target.remove()
+  //     })
+  //     active.appendChild(element)
+  //     document.getElementById("already-added").textContent = ""
+  //   }
+  //   else {
+  //     document.getElementById("already-added").textContent = peg_name + " is already in the queue"
+  //   }
+  // })
+  // .catch(error => {
+  //   console.error('Error sending array:', error);
+  //   document.getElementById("already-added").textContent = error
+  // });
 
 }
 
 function removeActivePlayers(peg_name) {
   let jsonData = {
-    'peg_name': peg_name
+    'peg_name': peg_name,
+    'action': 'remove'
   }
 
+  playerListSocket.send(JSON.stringify(jsonData)) 
 
-  fetch(origin + '/projects/roundrobin/api/removeactive/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': getCookie('csrftoken')  // Required by Django
-    },
-    body: JSON.stringify(jsonData)
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Response from backend:', data);
-    document.getElementById("already-added").textContent = peg_name + " has been removed from the queue."
-  })
-  .catch(error => {
-    console.error('Error sending array:', error);
-    document.getElementById("already-added").textContent = "failed to remove " + peg_name + " from the queue."
-  });
+
+  // fetch(origin + '/projects/roundrobin/api/removeactive/', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     'X-CSRFToken': getCookie('csrftoken')  // Required by Django
+  //   },
+  //   body: JSON.stringify(jsonData)
+  // })
+  // .then(response => response.json())
+  // .then(data => {
+  //   console.log('Response from backend:', data);
+  //   document.getElementById("already-added").textContent = peg_name + " has been removed from the queue."
+  // })
+  // .catch(error => {
+  //   console.error('Error sending array:', error);
+  //   document.getElementById("already-added").textContent = "failed to remove " + peg_name + " from the queue."
+  // });
 
 }
 
@@ -226,7 +231,7 @@ function restoreSelectState() {
 
   restoreConfig()
 
-  restoreActivePlayers()
+  // restoreActivePlayers()
 
   loadTimer()
   
@@ -251,59 +256,7 @@ function generateGame() {
       return data.res
     }
     document.getElementById('loading').textContent = ""
-    nextGames = document.querySelector('.games')
-    for (let game of data.games) {
-      let court = document.createElement('div')
-      court.classList.add("court")
-      let topLeft = document.createElement('div')
-      topLeft.classList.add("top-left")
-      topLeft.innerText = "Court"
-      court.appendChild(topLeft)
-      let courtNumber = document.createElement('div')
-      courtNumber.classList.add("court-number")
-      courtNumber.innerText = game.courtNumber
-      court.appendChild(courtNumber)
-      let bottomLeft = document.createElement('div')
-      bottomLeft.classList.add("bottom-left")
-      bottomLeft.innerText = "Court"
-      court.appendChild(bottomLeft)
-      let teamOne = document.createElement('div')
-      teamOne.classList.add("team-one", "team")
-      let player = document.createElement('div')
-      player.classList.add("player")
-      player.innerText = game.teamOne[0]
-      teamOne.appendChild(player)
-      player = document.createElement('div')
-      player.classList.add("player")
-      player.innerText = game.teamOne[1]
-      teamOne.appendChild(player)
-      court.appendChild(teamOne)
-      let teamTwo = document.createElement('div')
-      teamTwo.classList.add("team-two", "team")
-      player = document.createElement('div')
-      player.classList.add("player")
-      player.innerText = game.teamTwo[0]
-      teamTwo.appendChild(player)
-      player = document.createElement('div')
-      player.classList.add("player")
-      player.innerText = game.teamTwo[1]
-      teamTwo.appendChild(player)
-      court.appendChild(teamTwo)
-      let scores = document.createElement('div')
-      scores.classList.add('scores')
-      let teamOneScore = document.createElement('input')
-      teamOneScore.classList.add('team-one-score', 'score')
-      teamOneScore.type = "text"
-      teamOneScore.placeholder = "0"
-      scores.appendChild(teamOneScore)
-      let teamTwoScore = document.createElement('input')
-      teamTwoScore.classList.add('team-two-score', 'score')
-      teamTwoScore.type = "text"
-      teamTwoScore.placeholder = "0"
-      scores.appendChild(teamTwoScore)
-      court.appendChild(scores)
-      nextGames.appendChild(court)
-    }
+    currentGamesSocket.send(null)
   })
   .catch(error => {
     console.error('Search failed:', error);
@@ -389,3 +342,117 @@ fetch(origin + `/projects/roundrobin/api/gettimer/`, {
 // Call the function when the page loads
 window.onload = restoreSelectState;
 
+const sessionSocket = new WebSocket(
+      'ws://'
+      + window.location.host
+      + '/ws/session/'
+  );
+
+sessionSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    console.log(data)
+};
+
+sessionSocket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+};
+
+const playerListSocket = new WebSocket(
+      'ws://'
+      + window.location.host
+      + '/ws/playerList/'
+);
+
+playerListSocket.onmessage = function(e) {
+    const data = JSON.parse(JSON.parse(e.data));
+    const list = document.getElementById('active-players')
+    list.innerHTML = ""
+    // console.log(data)
+    for (const player of data) {
+      // console.log(player)
+      const element = document.createElement('li')
+      element.textContent = player.peg_name
+      // element.id = player.id
+      element.setAttribute("gender", player.gender)
+      element.setAttribute("peg_colour", player.peg_colour)
+      element.addEventListener("click", (e) => {
+        removeActivePlayers(e.target.textContent)
+        e.target.remove()
+      })
+      list.appendChild(element)
+    }
+};
+
+playerListSocket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+};
+
+const currentGamesSocket = new WebSocket(
+      'ws://'
+      + window.location.host
+      + '/ws/currentGames/'
+  );
+
+currentGamesSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    let currentGames = data.currentGames.games
+    document.getElementById('loading').textContent = ""
+    nextGames = document.querySelector('.games')
+    nextGames.innerHTML = ""
+    for (let game of currentGames) {
+      let court = document.createElement('div')
+      court.classList.add("court")
+      let topLeft = document.createElement('div')
+      topLeft.classList.add("top-left")
+      topLeft.innerText = "Court"
+      court.appendChild(topLeft)
+      let courtNumber = document.createElement('div')
+      courtNumber.classList.add("court-number")
+      courtNumber.innerText = game.courtNumber
+      court.appendChild(courtNumber)
+      let bottomLeft = document.createElement('div')
+      bottomLeft.classList.add("bottom-left")
+      bottomLeft.innerText = "Court"
+      court.appendChild(bottomLeft)
+      let teamOne = document.createElement('div')
+      teamOne.classList.add("team-one", "team")
+      let player = document.createElement('div')
+      player.classList.add("player")
+      player.innerText = game.teamOne[0]
+      teamOne.appendChild(player)
+      player = document.createElement('div')
+      player.classList.add("player")
+      player.innerText = game.teamOne[1]
+      teamOne.appendChild(player)
+      court.appendChild(teamOne)
+      let teamTwo = document.createElement('div')
+      teamTwo.classList.add("team-two", "team")
+      player = document.createElement('div')
+      player.classList.add("player")
+      player.innerText = game.teamTwo[0]
+      teamTwo.appendChild(player)
+      player = document.createElement('div')
+      player.classList.add("player")
+      player.innerText = game.teamTwo[1]
+      teamTwo.appendChild(player)
+      court.appendChild(teamTwo)
+      let scores = document.createElement('div')
+      scores.classList.add('scores')
+      let teamOneScore = document.createElement('input')
+      teamOneScore.classList.add('team-one-score', 'score')
+      teamOneScore.type = "text"
+      teamOneScore.placeholder = "0"
+      scores.appendChild(teamOneScore)
+      let teamTwoScore = document.createElement('input')
+      teamTwoScore.classList.add('team-two-score', 'score')
+      teamTwoScore.type = "text"
+      teamTwoScore.placeholder = "0"
+      scores.appendChild(teamTwoScore)
+      court.appendChild(scores)
+      nextGames.appendChild(court)
+    }
+};
+
+currentGamesSocket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+};

@@ -37,6 +37,11 @@ def getTimer():
         data = json.load(f)
     return {'endTime':data['matchEndTime']}
 
+def getCurrentGames():
+    with open(state_path, "r") as f:
+        data = json.load(f)
+    return {'currentGames':data['currentGames']}
+
 def getConfig():
     with open(config_path, "r") as f:
         data = json.load(f)
@@ -371,7 +376,6 @@ def main():
     # )
 
     matches = generate_game(df_stat, stats, data['gameCount'])
-    print("ASDASD", matches)
     # print(matches)
 
     with open(state_path, 'r') as f:
@@ -404,10 +408,9 @@ def main():
     )
     print(f"Player statistics saved to {output_file}")
 
+    with open(state_path, 'r') as f:
+        data = json.load(f)
     data['generating'] = False
-
-    with open(state_path, 'w') as file:
-        json.dump(data, file, indent=4)
 
     outputJson = {'games':[]}
     courts = ["4", "5", "8", "9", "10", "X", "Y", "Z", "$"]
@@ -419,7 +422,17 @@ def main():
         court['teamTwo'] = [match[2], match[3]]
         outputJson['games'].append(court)
     
-    outputJson['sittingOut'] = sitting_out
+    outputJson['sittingOut'] = list(sitting_out)
+
+    print(outputJson['sittingOut'])
+
+    data['currentGames'] = outputJson
+
+
+    with open(state_path, 'w') as file:
+        json.dump(data, file, indent=4)
+
+
 
     return outputJson
 
