@@ -1,5 +1,5 @@
 .interface-container {
-    margin-top: 30px;
+    margin-top: 70px;
 }
 
 .game, td {
@@ -119,3 +119,117 @@
     row-gap: 20px;
     column-gap: 20px;
 }
+
+.app-title {
+    font-family: "VT323", monospace;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 40px;
+    margin: 0px;
+}
+
+.player-pool {
+    background-color: white;
+    border-radius: 7px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    padding: 10px;
+    overflow: hidden;
+    max-height: 500px;
+}
+
+.player-pool-animation {
+    transition: max-height 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.player-pool-collapsed {
+    max-height: 46px;
+}
+
+.player-pool-list {
+    max-height: 500px;
+    overflow: scroll;
+}
+
+.section-heading {
+    font-size: 21px;
+    font-family: "Outfit", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 12px;
+}
+
+.section-expand {
+    margin-left: auto;
+}
+
+.player-pool-names {
+    list-style-type: none;
+    padding: 0;
+    margin: 12px 0px;
+    font-family: monospace;
+    display: flex;
+    flex-direction: row;
+    row-gap: 7px;
+    column-gap: 10px;
+    flex-wrap: wrap;
+}
+
+.player-li {
+    padding: 6px 14px;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+    background-color: #fff8f2;
+    font-size: 20px;
+}
+
+.player-li:hover {
+    background-color: rgba(255, 182, 193, 0.3);
+    cursor:no-drop;
+}
+
+.add-to-pool {
+    grid-area: 1 / 1 / 2 / 2; 
+    padding: 6px 14px;
+    margin: 0px;
+    font-family: monospace;
+    font-weight: 500;
+    background-color: transparent;
+    font-size: 20px;
+    border: none;
+    max-width: 40px;
+    transition: max-width 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+    cursor: pointer;
+    z-index: 1;
+}
+
+.add-to-pool:focus {
+    outline: none;
+    max-width: 120px;
+    transition: max-width 0.4s cubic-bezier(0.1, 0.9, 0.2, 1)
+}
+
+.search-suggestion {
+    grid-area: 1 / 1 / 2 / 2; 
+    color: gray;
+    top: -35px;
+    z-index: 0;
+    padding: 6px 14px;
+    font-size: 20px;
+    pointer-events: none;
+}
+
+.search-suggestion-container {
+    background-color: #ffce63;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px; 
+}
+

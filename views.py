@@ -21,7 +21,7 @@ def player_search_api(request):
     query = request.GET.get('q', '')
     results = []
     if len(query) >= 2:
-        players = Player.objects.filter(Q(peg_name__icontains=query))[:10]
+        players = Player.objects.filter(Q(peg_name__startswith=query))[:10]
         results = [{
             'peg_name': p.peg_name,
             'peg_colour': p.peg_colour,

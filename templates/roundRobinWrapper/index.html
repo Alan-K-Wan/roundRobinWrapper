@@ -9,23 +9,35 @@
 {% block js %}
 <script src="{% static 'roundRobinWrapper/script.js' %} " defer>
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&family=VT323&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+    <h1 class="app-title">RoundRobin.it</h1>
 {% endblock %}
 
 {% block content %}
 <div class="interface-container">
-    <p>credit: https://github.com/Prasi21/Badminton-Round-Robin</p>
-    <p>Note: you must <a style="color: blue" href="https://alanwan.dev/admin">login</a> then come back here to use this tool</p>
-    <p>Email any bugs to hello@alanwan.dev</p>
-    <h1>1. Select active players</h1>
+    <div class="player-pool player-pool-animation player-pool-collapsed">
+        <h2 class="section-heading toggle-player-pool"><span class="section-text">Active players (24)</span><span class="section-expand">▼</span></h2>
+        <div class="player-pool-list">
+            <ul class="player-pool-names" id="active-players">
+                <div class="search-suggestion-container">
+                    <input class="add-to-pool "type="text" id="search-box" placeholder="+">
+                    <div class="search-suggestion"></div>
+                </div>
+            </ul>
+        </div>
+    </div>
+    <h1>Add or Remove Players</h1>
     <p>Search then click on name to add to pool<p>
-    <input type="text" id="search-box" placeholder="Search players...">
+    
     <ul id="results-list"></ul>
     <p id="already-added" style="color: red"></p>
-    <h2>Active players</h2>
-    <p>Click on name to remove from pool</p>
-    <ul id="active-players">
-    </ul>
-    <h1>2. Set game parameters</h1>
+    
+    <h1>Settings</h1>
     <label for="nCourts">Number of courts available: </label>
     <select name="nCourts" id="nCourts">
         <option value="1">1</option>
@@ -49,7 +61,7 @@
         <option value="11">11</option>
         <option value="12">12</option>
     </select>
-    <h1>3. Generate game</h1>
+    <h1>Generate Game</h1>
     <button id="genGame" onclick="generateGame()">Generate</button>
     <button onclick="resetHistory()">Clear Game History</button>
     <p id="loading"></p>

@@ -103,6 +103,7 @@ document.getElementById('search-box').addEventListener('input', function () {
   const query = this.value.trim();
   if (query.length < 2) {
     document.getElementById('results-list').innerHTML = '';
+    document.querySelector('.search-suggestion').textContent = '';
     return;
   }
 
@@ -118,9 +119,12 @@ document.getElementById('search-box').addEventListener('input', function () {
     list.innerHTML = '';
 
     if (data.length === 0) {
+      document.querySelector('.search-suggestion').textContent = "";
       list.innerHTML = '<li>No results found.</li>';
       return;
     }
+
+    document.querySelector('.search-suggestion').textContent = data[0].peg_name;
 
     data.forEach(player => {
       const item = document.createElement('li');
@@ -343,8 +347,7 @@ fetch(origin + `/projects/roundrobin/api/gettimer/`, {
 window.onload = restoreSelectState;
 
 const sessionSocket = new WebSocket(
-      'wss://'
-      + window.location.host
+      window.location.host
       + '/ws/session/'
   );
 
@@ -358,19 +361,21 @@ sessionSocket.onclose = function(e) {
 };
 
 const playerListSocket = new WebSocket(
-      'wss://'
-      + window.location.host
+      window.location.host
       + '/ws/playerList/'
 );
 
 playerListSocket.onmessage = function(e) {
     const data = JSON.parse(JSON.parse(e.data));
     const list = document.getElementById('active-players')
-    list.innerHTML = ""
+    while (list.children.length > 1) {
+      list.removeChild(list.lastElementChild);
+    } 
     // console.log(data)
     for (const player of data) {
       // console.log(player)
       const element = document.createElement('li')
+      element.classList.add("player-li")
       element.textContent = player.peg_name
       // element.id = player.id
       element.setAttribute("gender", player.gender)
@@ -388,8 +393,7 @@ playerListSocket.onclose = function(e) {
 };
 
 const currentGamesSocket = new WebSocket(
-      'wss://'
-      + window.location.host
+      window.location.host
       + '/ws/currentGames/'
   );
 
@@ -456,3 +460,9 @@ currentGamesSocket.onmessage = function(e) {
 currentGamesSocket.onclose = function(e) {
     console.error('Chat socket closed unexpectedly');
 };
+
+let togglePlayerPool = document.querySelector(".toggle-player-pool")
+togglePlayerPool.addEventListener("click", (e) => {
+  let playerPool = document.querySelector(".player-pool")
+  playerPool.classList.toggle('player-pool-collapsed')
+})
