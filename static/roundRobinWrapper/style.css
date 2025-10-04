@@ -164,6 +164,7 @@
 
 .section-expand {
     margin-left: auto;
+    cursor: pointer;
 }
 
 .player-pool-names {
@@ -202,14 +203,15 @@
     border: none;
     max-width: 40px;
     transition: max-width 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
-    cursor: pointer;
     z-index: 1;
+    cursor: pointer;
 }
 
 .add-to-pool:focus {
     outline: none;
     max-width: 120px;
-    transition: max-width 0.4s cubic-bezier(0.1, 0.9, 0.2, 1)
+    transition: max-width 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+    cursor: auto;
 }
 
 .search-suggestion {
@@ -233,3 +235,6 @@
     grid-row-gap: 0px; 
 }
 
+.results-list {
+    display: none;
+}

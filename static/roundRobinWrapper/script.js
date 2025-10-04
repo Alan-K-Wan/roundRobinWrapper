@@ -120,7 +120,7 @@ document.getElementById('search-box').addEventListener('input', function () {
 
     if (data.length === 0) {
       document.querySelector('.search-suggestion').textContent = "";
-      list.innerHTML = '<li>No results found.</li>';
+      // list.innerHTML = '<li>No results found.</li>';
       return;
     }
 
@@ -347,7 +347,7 @@ fetch(origin + `/projects/roundrobin/api/gettimer/`, {
 window.onload = restoreSelectState;
 
 const sessionSocket = new WebSocket(
-      'wss://'
+      'ws://'
       + window.location.host
       + '/ws/session/'
   );
@@ -362,7 +362,7 @@ sessionSocket.onclose = function(e) {
 };
 
 const playerListSocket = new WebSocket(
-      'wss://'
+      'ws://'
       + window.location.host
       + '/ws/playerList/'
 );
@@ -373,6 +373,8 @@ playerListSocket.onmessage = function(e) {
     while (list.children.length > 1) {
       list.removeChild(list.lastElementChild);
     } 
+    let nActive = data.length
+    document.querySelector(".section-text").textContent = "Active players (" + nActive + ")"  
     // console.log(data)
     for (const player of data) {
       // console.log(player)
@@ -395,7 +397,7 @@ playerListSocket.onclose = function(e) {
 };
 
 const currentGamesSocket = new WebSocket(
-      'wss://'
+      'ws://'
       + window.location.host
       + '/ws/currentGames/'
   );
@@ -464,8 +466,43 @@ currentGamesSocket.onclose = function(e) {
     console.error('Chat socket closed unexpectedly');
 };
 
-let togglePlayerPool = document.querySelector(".toggle-player-pool")
+let togglePlayerPool = document.querySelector(".section-expand")
 togglePlayerPool.addEventListener("click", (e) => {
   let playerPool = document.querySelector(".player-pool")
   playerPool.classList.toggle('player-pool-collapsed')
+  toggleVisible = document.querySelector(".section-expand")
+  if(toggleVisible.textContent == "▲") {
+    toggleVisible.textContent = "▼"
+  } else {
+    toggleVisible.textContent = "▲"
+  }
+})
+
+
+
+let addPlayerButton = document.querySelector('.add-to-pool')
+addPlayerButton.addEventListener("focus",  (e) => {
+  addPlayerButton.placeholder = "Peg name"
+})
+addPlayerButton.addEventListener("blur", (e) => {
+  addPlayerButton.value = ""
+  addPlayerButton.placeholder = "+"
+  document.querySelector('.search-suggestion').textContent = ""
+  document.getElementById('results-list').innerHTML = ""
+})
+addPlayerButton.addEventListener("keydown", (e) => {
+  if (e.key === 'Enter') {
+    let topResults = document.getElementById('results-list')
+    if (topResults.children.length > 0) {
+      topResults.children[0].click()
+    } else {
+      alert('Player not added: invalid name.')
+    }
+  }
+  if (e.key === 'Enter' || e.key === "Escape") {
+    addPlayerButton.value = ""
+    addPlayerButton.placeholder = "+"
+    document.querySelector('.search-suggestion').textContent = ""
+    addPlayerButton.blur()
+  }
 })
