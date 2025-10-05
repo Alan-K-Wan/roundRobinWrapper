@@ -319,7 +319,7 @@ fetch(origin + `/projects/roundrobin/api/gettimer/`, {
 
     if (distance <= 0) {
       clearInterval(timer);
-      document.getElementById("countdown").innerHTML = "⏰ Time's up!";
+      document.getElementById("countdown").innerHTML = "0:00";
       return;
     }
 
@@ -466,11 +466,11 @@ currentGamesSocket.onclose = function(e) {
     console.error('Chat socket closed unexpectedly');
 };
 
-let togglePlayerPool = document.querySelector(".section-expand")
+let togglePlayerPool = document.querySelector(".player-pool-expand")
 togglePlayerPool.addEventListener("click", (e) => {
   let playerPool = document.querySelector(".player-pool")
   playerPool.classList.toggle('player-pool-collapsed')
-  toggleVisible = document.querySelector(".section-expand")
+  toggleVisible = document.querySelector(".player-pool-expand")
   if(toggleVisible.textContent == "▲") {
     toggleVisible.textContent = "▼"
   } else {
@@ -478,6 +478,17 @@ togglePlayerPool.addEventListener("click", (e) => {
   }
 })
 
+let toggleGameSettings = document.querySelector(".game-settings-expand")
+toggleGameSettings.addEventListener("click", (e) => {
+  let playerPool = document.querySelector(".game-settings")
+  playerPool.classList.toggle('game-settings-collapsed')
+  toggleVisible = document.querySelector(".game-settings-expand")
+  if(toggleVisible.textContent == "▲") {
+    toggleVisible.textContent = "▼"
+  } else {
+    toggleVisible.textContent = "▲"
+  }
+})
 
 
 let addPlayerButton = document.querySelector('.add-to-pool')
@@ -491,7 +502,7 @@ addPlayerButton.addEventListener("blur", (e) => {
   document.getElementById('results-list').innerHTML = ""
 })
 addPlayerButton.addEventListener("keydown", (e) => {
-  if (e.key === 'Enter') {
+  if (e.keyCode === 13) {
     let topResults = document.getElementById('results-list')
     if (topResults.children.length > 0) {
       topResults.children[0].click()
@@ -499,7 +510,7 @@ addPlayerButton.addEventListener("keydown", (e) => {
       alert('Player not added: invalid name.')
     }
   }
-  if (e.key === 'Enter' || e.key === "Escape") {
+  if (e.keyCode === 13 || e.keyCode === 27) {
     addPlayerButton.value = ""
     addPlayerButton.placeholder = "+"
     document.querySelector('.search-suggestion').textContent = ""

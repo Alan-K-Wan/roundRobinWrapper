@@ -11,7 +11,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500&family=Raleway+Dots&family=VT323&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block title %}
@@ -20,8 +20,8 @@
 
 {% block content %}
 <div class="interface-container">
-    <div class="player-pool player-pool-animation player-pool-collapsed">
-        <h2 class="section-heading toggle-player-pool"><span class="section-text">Active players (24)</span><span class="section-expand">▼</span></h2>
+    <div class="section-container player-pool section-container-animation player-pool-collapsed">
+        <h2 class="section-heading toggle-player-pool"><span class="section-text">Active players</span><span class="section-container-expand player-pool-expand">▼</span></h2>
         <div class="player-pool-list">
             <ul class="player-pool-names" id="active-players">
                 <div class="search-suggestion-container">
@@ -31,34 +31,40 @@
             </ul>
         </div>
     </div>
+    <div class="dashboard">
+        <p class="dashboard-title">Time Left</p>
+        <p id="countdown" class="time-remaining"></p>
+    </div>
+    <div class="section-container game-settings section-container-animation game-settings-collapsed">
+        <h2 class="section-heading toggle-game-settings"><span class="section-text">Settings</span><span class="section-container-expand game-settings-expand">▼</span></h2>
+        <label for="nCourts">Number of courts available: </label>
+        <select name="nCourts" id="nCourts">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+        </select><br>
+        <label for="minutes">Round length in minutes: </label>
+        <select name="minutes" id="minutes">
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+    </div>
     
     <ul id="results-list" class="results-list"></ul>
     <p id="already-added" style="color: red"></p>
-    
-    <h1>Settings</h1>
-    <label for="nCourts">Number of courts available: </label>
-    <select name="nCourts" id="nCourts">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-    </select><br>
-    <label for="minutes">Round length in minutes: </label>
-    <select name="minutes" id="minutes">
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-        <option value="10">10</option>
-        <option value="11">11</option>
-        <option value="12">12</option>
-    </select>
+
     <h1>Generate Game</h1>
     <button id="genGame" onclick="generateGame()">Generate</button>
     <button onclick="resetHistory()">Clear Game History</button>
@@ -69,6 +75,5 @@
     <button id="startRound" onclick="startRound()">Start Round</button>
     <button id="stopRound" onclick="">Stop Round</button>
     <p style="color: red" id="roundMessage"></p>
-    <h2>Time remaining: <span id="countdown">0:00</span></h2>
 </div>
 {% endblock %}

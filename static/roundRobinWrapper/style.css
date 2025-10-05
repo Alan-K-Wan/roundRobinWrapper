@@ -129,16 +129,8 @@
 }
 
 .player-pool {
-    background-color: white;
-    border-radius: 7px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-    padding: 10px;
-    overflow: hidden;
     max-height: 500px;
-}
-
-.player-pool-animation {
-    transition: max-height 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+    margin-bottom: 20px;
 }
 
 .player-pool-collapsed {
@@ -160,11 +152,6 @@
     display: flex;
     flex-direction: row;
     margin-bottom: 12px;
-}
-
-.section-expand {
-    margin-left: auto;
-    cursor: pointer;
 }
 
 .player-pool-names {
@@ -203,7 +190,6 @@
     border: none;
     max-width: 40px;
     transition: max-width 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
-    z-index: 1;
     cursor: pointer;
 }
 
@@ -218,10 +204,10 @@
     grid-area: 1 / 1 / 2 / 2; 
     color: gray;
     top: -35px;
-    z-index: 0;
     padding: 6px 14px;
     font-size: 20px;
     pointer-events: none;
+    z-index: -1;
 }
 
 .search-suggestion-container {
@@ -237,4 +223,72 @@
 
 .results-list {
     display: none;
+}
+
+.game-settings {
+    max-height: 110px;
+}
+
+.game-settings-collapsed {
+    max-height: 46px;
+}
+
+.section-container {
+    background-color: white;
+    border-radius: 7px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.section-container-animation {
+    transition: max-height 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.section-container-expand {
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.dashboard {
+    width: 100%;
+    background-color: #9ba193;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 4px 0px inset;
+    text-align: center;
+    padding: 10px;
+}
+
+.time-remaining {
+    font-family: "DSEG7 Classic", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 80px;
+    margin: 0;
+}
+
+.dashboard-title {
+    font-family: "Doto Variable", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    margin: 0px;
+}
+
+/* dseg7-classic-latin-400-normal */
+@font-face {
+  font-family: 'DSEG7 Classic';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(https://cdn.jsdelivr.net/fontsource/fonts/dseg7-classic@latest/latin-400-normal.woff2) format('woff2'), url(https://cdn.jsdelivr.net/fontsource/fonts/dseg7-classic@latest/latin-400-normal.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Doto Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(https://cdn.jsdelivr.net/fontsource/fonts/doto:vf@latest/latin-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
