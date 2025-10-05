@@ -319,7 +319,7 @@ fetch(origin + `/projects/roundrobin/api/gettimer/`, {
 
     if (distance <= 0) {
       clearInterval(timer);
-      document.getElementById("countdown").innerHTML = "0:00";
+      document.getElementById("countdown").innerHTML = "End";
       return;
     }
 

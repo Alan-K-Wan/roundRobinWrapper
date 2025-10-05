@@ -60,20 +60,17 @@
             <option value="11">11</option>
             <option value="12">12</option>
         </select>
+        <button onclick="resetHistory()">Clear Game History</button>
     </div>
-    
     <ul id="results-list" class="results-list"></ul>
-    <p id="already-added" style="color: red"></p>
-
-    <h1>Generate Game</h1>
-    <button id="genGame" onclick="generateGame()">Generate</button>
-    <button onclick="resetHistory()">Clear Game History</button>
+    {% comment %} <p id="already-added" style="color: red"></p> {% endcomment %}
+    <div class='round-control'>
+        <button class="button gen-game" id="genGame" onclick="generateGame()"><h2 class="button-text">Generate Next Round</h2></button>
+        <button class="button start-round" id="startRound" onclick="startRound()"><h2 class="button-text">Start Round</h2></button>
+    </div>
     <p id="loading"></p>
     <div class="games">
     </div>
-    <h1>4. Start round</h1>
-    <button id="startRound" onclick="startRound()">Start Round</button>
-    <button id="stopRound" onclick="">Stop Round</button>
     <p style="color: red" id="roundMessage"></p>
 </div>
 {% endblock %}

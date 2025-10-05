@@ -7,6 +7,8 @@
 }
 
 .court {
+    flex: 1 1 400px;
+    max-width: 400px;
     display: grid;
     grid-template-columns: 2fr 4fr 2fr;
     grid-template-rows: repeat(4, 1fr);
@@ -17,7 +19,6 @@
     border-radius: 7px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
     font-family: monospace;
-    max-width: 500px;
 }
 
 .top-left {
@@ -116,8 +117,11 @@
 .games {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
     row-gap: 20px;
     column-gap: 20px;
+    margin-bottom: 40px;
 }
 
 .app-title {
@@ -226,7 +230,8 @@
 }
 
 .game-settings {
-    max-height: 110px;
+    max-height: 140px;
+    margin-bottom: 20px;
 }
 
 .game-settings-collapsed {
@@ -237,6 +242,7 @@
     background-color: white;
     border-radius: 7px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    /* box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset; */
     padding: 10px;
     overflow: hidden;
 }
@@ -273,6 +279,58 @@
     font-weight: 900;
     font-style: normal;
     margin: 0px;
+}
+
+.generate-game {
+    width: 100%;
+    outline: none;
+    border: none;
+    height: 46px;
+    margin-bottom: 20px;
+    background-color: #c6ffb8;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.button {
+    border-radius: 20px;
+    border: none;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.button-text {
+    font-family: "Doto Variable";
+    font-weight: 900;
+    text-align: center;
+    margin: 0px;
+}
+
+.start-round {
+    background-color: #2bb344
+}
+
+.start-round:hover {
+    background-color: #238f37
+}
+
+.gen-game {
+    background-color: #e6b345;
+}
+
+.gen-game:hover {
+    background-color: #bb9239;
+}
+
+.round-control {
+    display: flex;
+    column-gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* dseg7-classic-latin-400-normal */
